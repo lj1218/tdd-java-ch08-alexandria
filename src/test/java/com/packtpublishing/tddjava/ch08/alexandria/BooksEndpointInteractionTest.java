@@ -57,7 +57,7 @@ public class BooksEndpointInteractionTest {
     @Test
     public void add_one_book() throws IOException {
         addBook(TDD_IN_JAVA);
-        verify(booksRepository).add(new Book(TITLE_BOOK_1, AUTHOR_BOOK_1, 1));
+        verify(booksRepository).add(new Book(TITLE_BOOK_1, AUTHOR_BOOK_1, States.fromValue(1)));
     }
 
     private Response addBook(Map<String, String> books) {

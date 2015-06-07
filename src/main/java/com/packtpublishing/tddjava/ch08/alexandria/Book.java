@@ -1,6 +1,8 @@
 package com.packtpublishing.tddjava.ch08.alexandria;
 
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,11 +11,11 @@ public class Book {
 
     private final String title;
     private final String author;
-    private ArrayList<Integer> status;
+    @XmlTransient
+    private ArrayList<States> status;
     private int id;
 
-
-    public Book(String title, String author, int status) {
+    public Book(String title, String author, States status) {
         this.title = title;
         this.author = author;
         this.status = new ArrayList<>();
@@ -24,8 +26,9 @@ public class Book {
         return title;
     }
 
-    public int getStatus() {
-        return status.get(status.size()-1);
+
+    public States getStatus() {
+        return status.get(status.size() - 1);
     }
 
     public String getAuthor() {
@@ -38,6 +41,11 @@ public class Book {
 
     public int getId() {
         return id;
+    }
+
+    @XmlElement(name = "status")
+    public int getStatusAsInteger(){
+        return getStatus().getValue();
     }
 
     public void rent() {
@@ -84,7 +92,7 @@ public class Book {
         return result;
     }
 
-    public List<Integer> anyState() {
+    public List<States> anyState() {
         return status;
     }
 }

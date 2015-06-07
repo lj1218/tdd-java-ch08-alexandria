@@ -1,8 +1,27 @@
 package com.packtpublishing.tddjava.ch08.alexandria;
 
-public class States {
-    public static final int BOUGHT = 1;
-    public static final int RENTED = 2;
-    public static final int AVAILABLE = 3;
-    public static final int CENSORED = 4;
+enum States {
+    BOUGHT (1),
+    RENTED (2),
+    AVAILABLE (3),
+    CENSORED (4);
+
+    private final int value;
+
+    private States(int value) {
+        this.value = value;
+    }
+
+    public int getValue() {
+        return value;
+    }
+
+    public static States fromValue(int value) {
+        for (States states : values()) {
+            if(states.getValue() == value) {
+                return states;
+            }
+        }
+        throw new IllegalArgumentException("Value '" + value + "' could not be found in States");
+    }
 }

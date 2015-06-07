@@ -15,7 +15,7 @@ public class BooksTest {
         Books books = new Books();
         books.add(book1);
 
-        assertThat(books.filterByState(String.valueOf(States.AVAILABLE)).isEmpty(), is(false));
+        assertThat(books.filterByState(String.valueOf(States.AVAILABLE.getValue())).isEmpty(), is(false));
     }
 
 }

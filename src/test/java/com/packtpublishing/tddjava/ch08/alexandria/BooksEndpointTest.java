@@ -106,7 +106,7 @@ public class BooksEndpointTest {
         book.then().body("empty", is(true));
     }
 
-    private Map<String, Object> withId(int id) {
+    private Map<String, ?> withId(int id) {
         Map<String, Object> properties = new HashMap<>();
         properties.put("id", id);
         return properties;
@@ -121,8 +121,8 @@ public class BooksEndpointTest {
                 .body("status", statusMatcher);
     }
 
-    private Response censorBook(Map<String, Object> properties) {
-        return RestAssured.given().log().path().contentType(ContentType.URLENC).post("books/{id}/censor", properties.get("id"));
+    private Response censorBook(Map<String, ?> bookProperties) {
+        return RestAssured.given().log().path().contentType(ContentType.URLENC).post("books/{id}/censor", bookProperties.get("id"));
     }
 
     private Matcher<Integer> hasStatus(int status) {
@@ -130,14 +130,14 @@ public class BooksEndpointTest {
     }
 
 
-    private void checkThatBook(Map<String, Object> properties, Matcher<Integer> status) {
-        final Response book2 = getBook(properties);
-        checkBookSetDetails(book2, (Integer) properties.get("id"), status);
+    private void checkThatBook(Map<String, ?> bookProperties, Matcher<Integer> status) {
+        final Response book2 = getBook(bookProperties);
+        checkBookSetDetails(book2, (Integer) bookProperties.get("id"), status);
     }
 
-    private void checkBookSetDetails(Response book2, int id, Matcher<Integer> status) {
-        book2.prettyPrint();
-        book2.then()
+    private void checkBookSetDetails(Response response, int id, Matcher<Integer> status) {
+        response.prettyPrint();
+        response.then()
                 .body("empty", is(false))
                 .body("result[0].author", is(AUTHOR_BOOK_1))
                 .body("result[0].title", is(TITLE_BOOK_1))
@@ -145,15 +145,15 @@ public class BooksEndpointTest {
                 .body("result[0].status", status);
     }
 
-    private Response getBook(Map<String, ?> properties) {
-        return RestAssured.given().log().path().contentType(ContentType.URLENC).accept(ContentType.JSON).parameters(properties).get("books");
+    private Response getBook(Map<String, ?> bookProperties) {
+        return RestAssured.given().log().path().contentType(ContentType.URLENC).accept(ContentType.JSON).parameters(bookProperties).get("books");
     }
 
-    private void assertBooksSize(Response books1, Matcher<String> matcher) {
-        books1.then().body(matcher);
+    private void assertBooksSize(Response response, Matcher<String> matcher) {
+        response.then().body(matcher);
     }
 
-    private Response addBook(Map<String, String> books) {
-        return RestAssured.given().log().path().contentType(ContentType.URLENC).parameters(books).post("books");
+    private Response addBook(Map<String, ?> bookProperties) {
+        return RestAssured.given().log().path().contentType(ContentType.URLENC).parameters(bookProperties).post("books");
     }
 }

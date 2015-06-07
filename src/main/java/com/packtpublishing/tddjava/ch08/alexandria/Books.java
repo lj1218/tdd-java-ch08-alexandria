@@ -50,7 +50,7 @@ public class Books {
     }
 
     public Books filterByState(String state) {
-        return new Books(new ConcurrentLinkedQueue<>(books.stream().filter(x -> x.anyState().contains(Integer.valueOf(state))).collect(toList())));
+        return new Books(new ConcurrentLinkedQueue<>(books.stream().filter(x -> x.anyState().contains(States.fromValue(Integer.valueOf(state)))).collect(toList())));
     }
 
     public boolean isEmpty() {
