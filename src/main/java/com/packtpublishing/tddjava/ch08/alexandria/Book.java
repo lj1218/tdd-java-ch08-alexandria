@@ -1,20 +1,23 @@
 package com.packtpublishing.tddjava.ch08.alexandria;
 
 import javax.xml.bind.annotation.XmlRootElement;
+import java.util.ArrayList;
+import java.util.List;
 
 @XmlRootElement
 public class Book {
 
     private final String title;
     private final String author;
-    private int status;
+    private ArrayList<Integer> status;
     private int id;
 
 
     public Book(String title, String author, int status) {
         this.title = title;
         this.author = author;
-        this.status = status;
+        this.status = new ArrayList<>();
+        this.status.add(status);
     }
 
     public String getTitle() {
@@ -22,7 +25,7 @@ public class Book {
     }
 
     public int getStatus() {
-        return status;
+        return status.get(status.size()-1);
     }
 
     public String getAuthor() {
@@ -38,23 +41,23 @@ public class Book {
     }
 
     public void rent() {
-        status = States.RENTED;
+        status.add(States.RENTED);
     }
 
     public void returnBook() {
-        status = States.AVAILABLE;
+        status.add(States.AVAILABLE);
     }
 
     public void censor() {
-        status = States.CENSORED;
+        status.add(States.CENSORED);
     }
 
     public void uncensor() {
-        status = States.AVAILABLE;
+        status.add(States.AVAILABLE);
     }
 
     public void prepare() {
-        status = States.AVAILABLE;
+        status.add(States.AVAILABLE);
     }
 
     @Override
@@ -65,8 +68,8 @@ public class Book {
         Book book = (Book) o;
 
         if (id != book.id) return false;
-        if (status != book.status) return false;
         if (!author.equals(book.author)) return false;
+        if (!status.equals(book.status)) return false;
         if (!title.equals(book.title)) return false;
 
         return true;
@@ -76,8 +79,12 @@ public class Book {
     public int hashCode() {
         int result = title.hashCode();
         result = 31 * result + author.hashCode();
-        result = 31 * result + status;
+        result = 31 * result + status.hashCode();
         result = 31 * result + id;
         return result;
+    }
+
+    public List<Integer> anyState() {
+        return status;
     }
 }
