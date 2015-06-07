@@ -56,4 +56,28 @@ public class Book {
     public void prepare() {
         status = States.AVAILABLE;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Book book = (Book) o;
+
+        if (id != book.id) return false;
+        if (status != book.status) return false;
+        if (!author.equals(book.author)) return false;
+        if (!title.equals(book.title)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = title.hashCode();
+        result = 31 * result + author.hashCode();
+        result = 31 * result + status;
+        result = 31 * result + id;
+        return result;
+    }
 }

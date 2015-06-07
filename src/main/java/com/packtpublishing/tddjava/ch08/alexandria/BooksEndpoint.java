@@ -7,15 +7,19 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Path("books")
+@Produces(MediaType.APPLICATION_JSON)
 @Component
 public class BooksEndpoint {
 
-    private BooksRepository books = new BooksRepository();
+    private BooksRepository books;
 
     private UserRepository users = new UserRepository();
 
+    public BooksEndpoint(BooksRepository books) {
+        this.books = books;
+    }
+
     @GET
-    @Produces(MediaType.APPLICATION_JSON)
     @Path("")
     public Response getAllBooks(@QueryParam("title") String title, @QueryParam("author") String author, @QueryParam("id") String id, @QueryParam("state") String state) {
         Books list = books.list();
@@ -35,7 +39,6 @@ public class BooksEndpoint {
     }
 
     @POST
-    @Produces(MediaType.APPLICATION_JSON)
     @Path("{id}/rent/{user}")
     public Response rentBook(@PathParam("id") String id, @PathParam("user") String userId) {
         final Books matchingBooks = books.list().filterById(id);
@@ -48,7 +51,6 @@ public class BooksEndpoint {
     }
 
     @POST
-    @Produces(MediaType.APPLICATION_JSON)
     @Path("{id}/return")
     public Response returnBook(@PathParam("id") String id) {
         Books list = books.list();
@@ -62,11 +64,10 @@ public class BooksEndpoint {
     }
 
     @POST
-    @Produces(MediaType.APPLICATION_JSON)
     @Path("{id}/censor")
     public Response censorBook(@PathParam("id") String id) {
         final Books matchingBooks = books.list().filterById(id);
-        if (null == id || matchingBooks.isEmpty() ||matchingBooks.first().getStatus() == States.CENSORED) {
+        if (null == id || matchingBooks.isEmpty() || matchingBooks.first().getStatus() == States.CENSORED) {
             return Response.status(Response.Status.BAD_REQUEST).entity("Could not process this request").build();
         }
         matchingBooks.first().censor();
@@ -75,7 +76,6 @@ public class BooksEndpoint {
     }
 
     @POST
-    @Produces(MediaType.APPLICATION_JSON)
     @Path("{id}/uncensor")
     public Response uncensorBook(@PathParam("id") String id) {
         final Books matchingBooks = books.list().filterById(id);
@@ -88,7 +88,6 @@ public class BooksEndpoint {
     }
 
     @POST
-    @Produces(MediaType.APPLICATION_JSON)
     @Path("{id}/prepare")
     public Response initialPreparation(@PathParam("id") String id) {
         final Books matchingBooks = books.list().filterById(id);
@@ -101,8 +100,6 @@ public class BooksEndpoint {
     }
 
 
-
-
     @POST
     @Produces(MediaType.TEXT_PLAIN)
     @Path("")
@@ -113,4 +110,5 @@ public class BooksEndpoint {
         books.add(new Book(title, author, States.BOUGHT));
         return Response.accepted(books.list().size()).build();
     }
+
 }
