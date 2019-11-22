@@ -10,9 +10,13 @@ import javax.ws.rs.core.Response;
 @Component
 public class BooksEndpoint {
 
-    private BooksRepository books = new BooksRepository();
+    private BooksRepository books;
 
     private UserRepository users = new UserRepository();
+
+    public BooksEndpoint(BooksRepository booksRepository) {
+        books = booksRepository;
+    }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -66,7 +70,7 @@ public class BooksEndpoint {
     @Path("{id}/censor")
     public Response censorBook(@PathParam("id") String id) {
         final Books matchingBooks = books.list().filterById(id);
-        if (null == id || matchingBooks.isEmpty() ||matchingBooks.first().getStatus() == States.CENSORED) {
+        if (null == id || matchingBooks.isEmpty() || matchingBooks.first().getStatus() == States.CENSORED) {
             return Response.status(Response.Status.BAD_REQUEST).entity("Could not process this request").build();
         }
         matchingBooks.first().censor();
@@ -99,9 +103,6 @@ public class BooksEndpoint {
 
         return Response.accepted(matchingBooks.first()).build();
     }
-
-
-
 
     @POST
     @Produces(MediaType.TEXT_PLAIN)
