@@ -1,4 +1,4 @@
-# tdd-java-chapter-08
+# tdd-java-ch08-alexandria
 
 ## Reference
 
